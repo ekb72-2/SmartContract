@@ -1,0 +1,31 @@
+pragma solidity^0.4.0;
+
+contract MyContract {
+    address private admin;
+    address owner;
+    mapping (address=> uint) userBalances;
+    
+    function MyContract (){
+       owner = msg.sender;
+    }
+    
+    modifier onlyOwner {
+        require (msg.sender == owner);
+        _;
+    }
+   
+    
+    function add() payable onlyOwner private returns (bool) {
+        userBalances [msg.sender] += msg.value;
+    }
+    
+    function burn (uint amount) onlyOwner private{
+        userBalances [msg.sender] -= msg.value;
+    }
+    function withdrawBalance () onlyOwner private {
+        if(!(msg.sender.call.value (userBalances[msg.sender])() )){
+            throw;
+        }
+        userBalances[msg.sender]= 0;
+    }
+  
